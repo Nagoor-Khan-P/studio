@@ -38,12 +38,12 @@ export default function RecentTrades({ trades }: Props) {
             <TableHead>Date</TableHead>
             <TableHead>Notes</TableHead>
             <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="w-[40px]"><span className="sr-only">Actions</span></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {trades.map((trade) => (
-            <TableRow key={trade.id}>
+            <TableRow key={trade.id} className="group">
               <TableCell className="font-medium whitespace-nowrap">{format(new Date(trade.date), 'MMM d, yyyy')}</TableCell>
               <TableCell className="text-muted-foreground truncate max-w-xs">{trade.notes || '–'}</TableCell>
               <TableCell className={cn(
@@ -53,7 +53,7 @@ export default function RecentTrades({ trades }: Props) {
                 {formatCurrency(trade.amount)}
               </TableCell>
               <TableCell className="text-right">
-                <Button variant="ghost" size="icon" onClick={() => handleEditClick(trade)}>
+                <Button variant="ghost" size="icon" onClick={() => handleEditClick(trade)} className="opacity-0 group-hover:opacity-100">
                   <Pencil className="h-4 w-4" />
                   <span className="sr-only">Edit</span>
                 </Button>
