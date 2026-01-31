@@ -16,15 +16,6 @@ export default async function Home() {
         <PerformanceMetrics trades={trades} />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-7">
           <Card className="lg:col-span-4">
-            <CardHeader>
-              <CardTitle>Performance Over Time</CardTitle>
-              <CardDescription>Cumulative profit/loss history.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PerformanceChart trades={trades} />
-            </CardContent>
-          </Card>
-          <Card className="lg:col-span-3">
              <CardHeader>
               <CardTitle>Recent Trades</CardTitle>
               <CardDescription>
@@ -33,6 +24,15 @@ export default async function Home() {
             </CardHeader>
             <CardContent>
               <RecentTrades trades={recentTrades} />
+            </CardContent>
+          </Card>
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle>Performance Over Time</CardTitle>
+              <CardDescription>Cumulative profit/loss history.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PerformanceChart trades={trades} />
             </CardContent>
           </Card>
         </div>
