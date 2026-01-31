@@ -40,9 +40,14 @@ export async function createTradeEntry(prevState: State, formData: FormData) {
   try {
     await addTrade({ amount, date, notes });
   } catch (error) {
-    return {
-      message: 'Database Error: Failed to create entry.',
-    };
+    console.error("CREATE TRADE ERROR:", error);
+
+  return {
+    message:
+      error instanceof Error
+        ? error.message
+        : "Database Error: Failed to create entry.",
+  };
   }
 
   revalidatePath('/dashboard');

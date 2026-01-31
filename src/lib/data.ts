@@ -1,51 +1,102 @@
-import type { Trade } from './types';
-
-// In-memory store for demonstration purposes.
-// In a real application, you would use a database.
-let trades: Trade[] = [
-    { id: '1', date: new Date('2024-07-15'), amount: 150.75, notes: 'Good start to the week.' },
-    { id: '2', date: new Date('2024-07-16'), amount: -50.25, notes: 'Small loss, followed my plan.' },
-    { id: '3', date: new Date('2024-07-17'), amount: 250.00, notes: 'Big win on a breakout.' },
-    { id: '4', date: new Date('2024-07-18'), amount: -75.50, notes: 'Choppy market.' },
-    { id: '5', date: new Date('2024-07-19'), amount: 120.00, notes: 'Consistent profits.' },
-    { id: '6', date: new Date('2024-07-20'), amount: 30.50, notes: 'Scalping.' },
-    { id: '7', date: new Date('2024-07-21'), amount: -90.00, notes: 'Revenge trading, need to stop.' },
-];
-
-// Sort trades by date descending
-trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+import type { Trade } from "./types";
+import { prisma } from "@/lib/prisma";
+import { getSessionUserId } from "@/lib/session";
 
 export async function getTrades(): Promise<Trade[]> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 100));
-  return trades;
+  const userId = await getSessionUserId();
+  if (!userId) return [];
+
+  const trades = await prisma.trade.findMany({
+    where: { userId },
+    orderBy: { tradeDate: "desc" },
+  });
+
+  return trades.map((t: (typeof trades)[number]) => ({
+    id: t.id,
+    date: t.tradeDate,
+    amount: t.pnl,
+    notes: t.notes ?? "",
+  }));
 }
 
-export async function addTrade(trade: Omit<Trade, 'id' | 'date'> & {date: Date}): Promise<Trade> {
-  await new Promise(resolve => setTimeout(resolve, 100));
-  const newTrade = { ...trade, id: new Date().getTime().toString() };
-  trades = [newTrade, ...trades];
-  trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  return newTrade;
-}
 
-export async function updateTrade(id: string, trade: Omit<Trade, 'id' | 'date'> & {date: Date}): Promise<Trade> {
-  await new Promise(resolve => setTimeout(resolve, 100));
-  const index = trades.findIndex(t => t.id === id);
-  if (index === -1) {
-    throw new Error('Trade not found');
+/**
+ * Add a new trade for the logged-in user
+ */
+export async function addTrade(
+  trade: Omit<Trade, "id">
+): Promise<Trade> {
+  const userId = await getSessionUserId();
+  if (!userId) {
+    throw new Error("Unauthorized");
   }
-  const updatedTrade = { ...trade, id };
-  trades[index] = updatedTrade;
-  trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  return updatedTrade;
+
+  const created = await prisma.trade.create({
+    data: {
+      userId,
+      tradeDate: trade.date,
+      pnl: trade.amount,
+      notes: trade.notes,
+      symbol: "N/A",       // can be improved later
+      entryPrice: 0,
+      exitPrice: 0,
+      quantity: 1,
+    },
+  });
+
+  return {
+    id: created.id,
+    date: created.tradeDate,
+    amount: created.pnl,
+    notes: created.notes ?? "",
+  };
 }
 
+/**
+ * Update an existing trade
+ */
+export async function updateTrade(
+  id: string,
+  trade: Omit<Trade, "id">
+): Promise<Trade> {
+  const userId = await getSessionUserId();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const updated = await prisma.trade.update({
+    where: {
+      id,
+      userId, // ensures user can only update own trades
+    },
+    data: {
+      tradeDate: trade.date,
+      pnl: trade.amount,
+      notes: trade.notes,
+    },
+  });
+
+  return {
+    id: updated.id,
+    date: updated.tradeDate,
+    amount: updated.pnl,
+    notes: updated.notes ?? "",
+  };
+}
+
+/**
+ * Delete a trade
+ */
 export async function deleteTrade(id: string): Promise<void> {
-  await new Promise(resolve => setTimeout(resolve, 100));
-  const index = trades.findIndex(t => t.id === id);
-  if (index === -1) {
-    throw new Error('Trade not found');
+  const userId = await getSessionUserId();
+  if (!userId) {
+    throw new Error("Unauthorized");
   }
-  trades = trades.filter(t => t.id !== id);
+
+  await prisma.trade.delete({
+    where: {
+      id,
+      userId, // ensures user can only delete own trades
+    },
+  });
 }

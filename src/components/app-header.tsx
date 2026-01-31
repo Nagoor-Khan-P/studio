@@ -1,33 +1,45 @@
 'use client';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { PlusCircle } from 'lucide-react';
+
 import Logo from '@/components/logo';
-import DailyEntryForm from '@/components/daily-entry-form';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { User } from 'lucide-react';
+import ProfileSheet from '@/components/profile-sheet';
 
-export default function AppHeader() {
-  const [open, setOpen] = useState(false);
+type UserInfo = {
+  name: string | null;
+  email: string;
+};
 
+export default function AppHeader({
+  user,
+}: {
+  user: UserInfo;
+}) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-8">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 sm:px-8">
       <Logo href="/dashboard" />
-      <div className="ml-auto flex items-center gap-2">
-          <>
-            <Sheet open={open} onOpenChange={setOpen}>
-              <SheetTrigger asChild>
-                <Button size="sm" className="gap-1">
-                  <PlusCircle className="h-4 w-4" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Entry
-                  </span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent>
-                <DailyEntryForm setOpen={setOpen} />
-              </SheetContent>
-            </Sheet>
-          </>
+
+      <div className="flex items-center gap-3">
+        <span className="hidden sm:block text-sm text-foreground/80">
+          Welcome back,&nbsp;
+          <span className="font-semibold text-foreground">
+            {user.name ?? 'Trader'}
+          </span>
+        </span>
+
+        <ProfileSheet user={user}>
+          <Button
+            variant="ghost"
+            className="
+              h-9 w-9 rounded-full
+              bg-primary/10 text-primary
+              hover:bg-primary/20
+              focus-visible:ring-2 focus-visible:ring-ring
+            "
+          >
+            <User className="h-5 w-5" />
+          </Button>
+        </ProfileSheet>
       </div>
     </header>
   );
