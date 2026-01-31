@@ -1,7 +1,7 @@
 import { TrendingUp } from "lucide-react";
 import Link from "next/link";
 
-export default function Logo({ href = '/icon.png' }: { href?: string }) {
+export default function Logo({ href = '/' }: { href?: string }) {
   return (
     <Link
       href={href}
