@@ -40,3 +40,12 @@ export async function updateTrade(id: string, trade: Omit<Trade, 'id' | 'date'> 
   trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return updatedTrade;
 }
+
+export async function deleteTrade(id: string): Promise<void> {
+  await new Promise(resolve => setTimeout(resolve, 100));
+  const index = trades.findIndex(t => t.id === id);
+  if (index === -1) {
+    throw new Error('Trade not found');
+  }
+  trades = trades.filter(t => t.id !== id);
+}

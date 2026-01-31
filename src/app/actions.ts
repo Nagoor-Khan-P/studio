@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { addTrade, updateTrade } from '@/lib/data';
+import { addTrade, updateTrade, deleteTrade } from '@/lib/data';
 import { revalidatePath } from 'next/cache';
 
 const TradeFormSchema = z.object({
@@ -80,4 +80,21 @@ export async function updateTradeEntry(prevState: State, formData: FormData) {
 
   revalidatePath('/');
   return { message: 'Successfully updated entry.', errors: {} };
+}
+
+export async function deleteTradeEntry(prevState: State, formData: FormData): Promise<State> {
+  const id = formData.get('id');
+
+  if (!id || typeof id !== 'string') {
+    return { message: 'Invalid trade ID.' };
+  }
+  
+  try {
+    await deleteTrade(id);
+    revalidatePath('/');
+    return { message: 'Successfully deleted entry.' };
+  } catch (error) {
+    const err = error as Error;
+    return { message: err.message || 'Database Error: Failed to delete entry.' };
+  }
 }
