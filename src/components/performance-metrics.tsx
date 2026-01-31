@@ -1,6 +1,6 @@
 import type { Trade } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ArrowDown, ArrowUp, DollarSign, Percent, CalendarDays, BarChart } from "lucide-react";
+import { ArrowDown, ArrowUp, IndianRupee, Percent, CalendarDays, BarChart } from "lucide-react";
 import { formatCurrency, cn } from "@/lib/utils";
 
 type Props = {
@@ -26,7 +26,7 @@ export default function PerformanceMetrics({ trades }: Props) {
     {
       title: 'Total P/L',
       value: formatCurrency(totalProfitLoss),
-      icon: DollarSign,
+      icon: IndianRupee,
       color: totalProfitLoss >= 0 ? 'text-accent' : 'text-destructive',
     },
     {
