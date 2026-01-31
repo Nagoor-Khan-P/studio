@@ -101,7 +101,7 @@ export default function RecentTrades({ trades }: Props) {
             <TableHead>Date</TableHead>
             <TableHead>Notes</TableHead>
             <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="w-[80px]"><span className="sr-only">Actions</span></TableHead>
+            <TableHead className="text-right w-[80px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
