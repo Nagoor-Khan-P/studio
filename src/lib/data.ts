@@ -23,8 +23,20 @@ export async function getTrades(): Promise<Trade[]> {
 
 export async function addTrade(trade: Omit<Trade, 'id' | 'date'> & {date: Date}): Promise<Trade> {
   await new Promise(resolve => setTimeout(resolve, 100));
-  const newTrade = { ...trade, id: (trades.length + 1).toString() };
+  const newTrade = { ...trade, id: new Date().getTime().toString() };
   trades = [newTrade, ...trades];
   trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   return newTrade;
+}
+
+export async function updateTrade(id: string, trade: Omit<Trade, 'id' | 'date'> & {date: Date}): Promise<Trade> {
+  await new Promise(resolve => setTimeout(resolve, 100));
+  const index = trades.findIndex(t => t.id === id);
+  if (index === -1) {
+    throw new Error('Trade not found');
+  }
+  const updatedTrade = { ...trade, id };
+  trades[index] = updatedTrade;
+  trades.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return updatedTrade;
 }

@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { addTrade } from '@/lib/data';
+import { addTrade, updateTrade } from '@/lib/data';
 import { revalidatePath } from 'next/cache';
 
 const TradeFormSchema = z.object({
@@ -47,4 +47,37 @@ export async function createTradeEntry(prevState: State, formData: FormData) {
 
   revalidatePath('/');
   return { message: 'Successfully added entry.', errors: {} };
+}
+
+export async function updateTradeEntry(prevState: State, formData: FormData) {
+  const id = formData.get('id');
+  if (!id || typeof id !== 'string') {
+    return { message: 'Invalid trade ID.', errors: {} };
+  }
+  
+  const validatedFields = TradeFormSchema.safeParse({
+    amount: formData.get('amount'),
+    date: formData.get('date'),
+    notes: formData.get('notes'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing or invalid fields. Failed to update entry.',
+    };
+  }
+  
+  const { amount, date, notes } = validatedFields.data;
+
+  try {
+    await updateTrade(id, { amount, date, notes });
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to update entry.',
+    };
+  }
+
+  revalidatePath('/');
+  return { message: 'Successfully updated entry.', errors: {} };
 }
