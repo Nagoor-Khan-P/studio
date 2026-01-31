@@ -92,7 +92,7 @@ export default function DailyEntryForm({ setOpen }: { setOpen: Dispatch<SetState
           <SheetClose asChild>
             <Button variant="outline">Cancel</Button>
           </SheetClose>
-          <SubmitButton>Save Entry</SubmitButton>
+          <SubmitButton>Add Entry</SubmitButton>
         </SheetFooter>
       </form>
     </>
