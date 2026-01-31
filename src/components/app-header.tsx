@@ -24,7 +24,7 @@ export default function AppHeader() {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-8">
-      <Logo />
+      <Logo href="/dashboard" />
       <div className="ml-auto flex items-center gap-2">
         {user && (
           <>

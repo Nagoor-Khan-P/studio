@@ -32,7 +32,7 @@ export default function SignupPage() {
     setError(null);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push('/');
+      router.push('/dashboard');
     } catch (error: any) {
       setError(error.message);
     } finally {

@@ -45,7 +45,7 @@ export async function createTradeEntry(prevState: State, formData: FormData) {
     };
   }
 
-  revalidatePath('/');
+  revalidatePath('/dashboard');
   return { message: 'Successfully added entry.', errors: {} };
 }
 
@@ -78,7 +78,7 @@ export async function updateTradeEntry(prevState: State, formData: FormData) {
     };
   }
 
-  revalidatePath('/');
+  revalidatePath('/dashboard');
   return { message: 'Successfully updated entry.', errors: {} };
 }
 
@@ -91,7 +91,7 @@ export async function deleteTradeEntry(prevState: State, formData: FormData): Pr
   
   try {
     await deleteTrade(id);
-    revalidatePath('/');
+    revalidatePath('/dashboard');
     return { message: 'Successfully deleted entry.' };
   } catch (error) {
     const err = error as Error;
