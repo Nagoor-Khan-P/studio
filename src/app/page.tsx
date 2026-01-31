@@ -7,7 +7,6 @@ import { getTrades } from '@/lib/data';
 
 export default async function Home() {
   const trades = await getTrades();
-  const recentTrades = trades.slice(0, 7);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -19,11 +18,11 @@ export default async function Home() {
              <CardHeader>
               <CardTitle>Recent Trades</CardTitle>
               <CardDescription>
-                Your last {recentTrades.length} trading days.
+                A log of your recent trades.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentTrades trades={recentTrades} />
+              <RecentTrades trades={trades} />
             </CardContent>
           </Card>
           <Card className="lg:col-span-3">
