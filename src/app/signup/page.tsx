@@ -3,18 +3,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import Logo from '@/components/logo';
-import { useFirebaseApp } from '@/firebase';
 import { Loader2 } from 'lucide-react';
 
 export default function SignupPage() {
-  const app = useFirebaseApp();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,21 +20,10 @@ export default function SignupPage() {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-     if (!app) {
-        setError("Firebase not initialized");
-        return;
-    }
-    const auth = getAuth(app);
     setLoading(true);
     setError(null);
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push('/dashboard');
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
+    await new Promise(r => setTimeout(r, 500));
+    router.push('/dashboard');
   };
 
   return (

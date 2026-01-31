@@ -4,7 +4,6 @@ import PerformanceChart from '@/components/performance-chart';
 import RecentTrades from '@/components/recent-trades';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getTrades } from '@/lib/data';
-import AuthWrapper from '@/components/auth-wrapper';
 
 async function DashboardContent() {
   const trades = await getTrades();
@@ -43,8 +42,6 @@ async function DashboardContent() {
 
 export default function DashboardPage() {
   return (
-    <AuthWrapper>
       <DashboardContent />
-    </AuthWrapper>
   );
 }
